@@ -1,0 +1,32 @@
+{
+  "name": "aniveo-phantom",
+  "version": "1.0.0",
+  "description": "A phantom version of the aniveo.com website",
+  "main": "index.js",
+  "scripts": {
+    "dev": "grunt dev",
+    "build": "grunt build",
+    "serve": "grunt serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://justusburger@bitbucket.org/teampsypher/aniveo-phantom.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/teampsypher/aniveo-phantom#readme",
+  "devDependencies": {
+    "autoprefixer": "^6.3.6",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-concurrent": "^2.3.0",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-php": "^1.5.1",
+    "grunt-postcss": "^0.8.0",
+    "load-grunt-tasks": "^3.5.0"
+  },
+  "dependencies": {
+    "bootstrap-grid": "^2.0.1"
+  }
+}
