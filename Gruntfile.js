@@ -1,7 +1,12 @@
-var path = require('path');
+const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const autoprefixer = require('autoprefixer');
+const webpack = require('webpack');
+
 
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
+  let extractSASS = new ExtractTextPlugin('[name].css');
 
   grunt.initConfig({
     php: {
@@ -22,27 +27,8 @@ module.exports = function (grunt) {
         }
       },
       markup: {
-        files: ['*.php'],
+        files: ['*.php', 'assets/*'],
         tasks: []
-      },
-      styles: {
-        files: ['src/styles/**/*.scss'],
-        tasks: ['sass', 'postcss']
-      }
-    },
-    sass: {
-      styles: {
-        options: {
-          update: true,
-          style: 'expanded'
-        },
-        files: [{
-          expand: true,
-          cwd: './src/styles/',
-          src: ['index.scss'],
-          dest: './css/',
-          ext: '.css'
-        }]
       }
     },
     concurrent: {
@@ -50,17 +36,36 @@ module.exports = function (grunt) {
         options: {
           logConcurrentOutput: true
         },
-        tasks: ['serve', 'watch']
+        tasks: ['serve', 'webpack', 'watch']
       }
     },
-    postcss: {
-      options: {
-        processors: [
-          require('autoprefixer')({browsers: 'last 5 versions'})
-        ]
-      },
-      dist: {
-        src: 'css/*.css'
+    webpack: {
+      dev: {
+        watch: true,
+        entry: {
+          'app-scripts': path.join(__dirname, '/src/scripts/index.js'),
+          'app-styles': path.join(__dirname, '/src/styles/index.scss')
+        },
+        output: {
+          path: "assets/",
+          filename: "[name].js"
+        },
+        module: {
+          loaders: [
+            {test: /\.js$/, include: path.join(__dirname, 'src/scripts'), loaders: ['babel']},
+            {
+              test: /\.scss/,
+              include: path.join(__dirname, 'src/styles'),
+              loader: extractSASS.extract(['css', 'postcss', 'sass'])
+            }
+          ]
+        },
+        plugins: [
+          extractSASS
+        ],
+        postcss: function () {
+          return [autoprefixer({browsers: 'last 2 versions'})];
+        }
       }
     }
   });
@@ -75,8 +80,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('build', [
-    'sass',
-    'postcss'
+    'webpack'
   ]);
 
 
